@@ -16,17 +16,6 @@ import scala.concurrent.{Future, blocking}
 import scala.jdk.DurationConverters._
 
 object BlockingProcess {
-
-  def getPid(process: JavaProcess): Option[Int] = {
-    if (Helpers.isWindows) {
-      None
-    } else {
-      val pidField = process.getClass.getDeclaredField("pid")
-      pidField.setAccessible(true)
-      Some(pidField.get(process).asInstanceOf[Int])
-    }
-  }
-
   /**
    * The configuration key to use in order to override the dispatcher used for blocking IO.
    */
@@ -45,7 +34,7 @@ object BlockingProcess {
    * @param stdout a `akka.stream.scaladsl.Source[ByteString, Future[IOResult]]` for the standard output stream of the process
    * @param stderr a `akka.stream.scaladsl.Source[ByteString, Future[IOResult]]` for the standard error stream of the process
    */
-  case class Started(pid: Option[Int],
+  case class Started(pid: Option[Long],
                      stdin: Sink[ByteString, Future[IOResult]],
                      stdout: Source[ByteString, Future[IOResult]],
                      stderr: Source[ByteString, Future[IOResult]])
@@ -194,7 +183,7 @@ class BlockingProcess private (
         .withAttributes(selfDispatcherAttribute)
         .mapMaterializedValue(_.andThen { case _ => self ! StderrTerminated })
 
-      messageAdapter ! Started(getPid(process), stdin, stdout, stderr)
+      messageAdapter ! Started(Some(process.pid()), stdin, stdout, stderr)
 
       log.debug(
         s"Blocking process started with dispatcher: $blockingIODispatcherId"
@@ -281,7 +270,7 @@ private object ProcessDestroyer {
           if (Helpers.isWindows) {
             process.destroy()
           } else {
-            val pid = BlockingProcess.getPid(process).get
+            val pid = process.pid()
             import sys.process._
             s"pkill -KILL -P $pid".! == 0
           }
