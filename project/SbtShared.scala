@@ -59,7 +59,7 @@ object SbtShared {
   val gitIsDirtyNow = gitIsDirty()
 
   val versionNow = {
-    val base = "0.30.0"
+    val base = "0.31.0"
     if (gitIsDirtyNow)
       base + "-SNAPSHOT"
     else {
@@ -67,7 +67,7 @@ object SbtShared {
       s"$base+$hash"
     }
   }
-  lazy val versionRuntime = "1.0.0-SNAPSHOT"
+  lazy val versionRuntime = "1.1.0-SNAPSHOT"
 
   lazy val orgSettings = Seq(
     organization := "org.scastie",
