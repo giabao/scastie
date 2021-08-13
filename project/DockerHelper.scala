@@ -58,7 +58,7 @@ object DockerHelper extends AutoPlugin {
   }
 
   def serverDockerfile(): Def.Initialize[Task[Dockerfile]] = Def.task {
-    baseDockerfile("adoptopenjdk:8u292-b10-jre-hotspot", stage.value)
+    baseDockerfile("adoptopenjdk:16-jre-hotspot", stage.value)
       .label("scastie" -> "server")
       .user(username)
       .workDir(appDir)
@@ -104,7 +104,7 @@ object DockerHelper extends AutoPlugin {
 
     val dest = s"$userHome/projects"
 
-    baseDockerfile("adoptopenjdk:8u292-b10-jdk-hotspot", stage.value)
+    baseDockerfile("adoptopenjdk:16-jdk-hotspot", stage.value)
       .label("scastie" -> "runner")
       .runRaw(s"""\\
         mkdir $appDir/sbt && \\
