@@ -1,11 +1,10 @@
 const Path = require('path');
-const Merge = require("webpack-merge");
+const { merge } = require("webpack-merge");
 
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 const Webpack = require('webpack');
 
 const ProdConfig = 
@@ -19,21 +18,24 @@ const Common = require('./webpack.common.js');
 const publicFolderName = "out/public"
 
 function extract(){
-  return new ExtractTextPlugin({
-    filename: "[name].css"
-  });
+  return new MiniCssExtractPlugin();
 }
 
 const extractSassApp = extract();
 const extractSassEmbed = extract();
 
 function Web(extractSass){
-  return Merge(Common.Web, {
+  return merge(Common.Web, {
+    mode: 'production',
+    optimization: {
+      minimize: true,
+      minimizer: [new TerserPlugin()],
+    },
     output: {
-      filename: '[name].js',
       path: Path.resolve(__dirname, publicFolderName),
       publicPath: '/public/',
-      libraryTarget: 'window'
+      libraryTarget: 'window',
+      clean: true,
     },
     resolve: {
       alias: {
@@ -44,14 +46,12 @@ function Web(extractSass){
       rules: [
         {
           test: /\.scss$/,
-           use: extractSass.extract({
-            use: [
-              { loader: "css-loader", options: {sourceMap: true} },
-              { loader: "resolve-url-loader", options: {sourceMap: true} },
-              { loader: "sass-loader", options: {sourceMap: true} }
-            ],
-            fallback: "style-loader"
-          })
+          use: [
+            MiniCssExtractPlugin.loader,
+            { loader: "css-loader", options: {sourceMap: true} },
+            { loader: "resolve-url-loader", options: {sourceMap: true} },
+            { loader: "sass-loader", options: {sourceMap: true} }
+          ]
         },
         {
           test: /\.js$/,
@@ -63,12 +63,7 @@ function Web(extractSass){
     plugins: [
       ProdConfig,
       extractSass,
-      new UglifyJSPlugin({
-        sourceMap: true
-      }),
       new CompressionPlugin({
-        asset: "[path].gz[query]",
-        algorithm: "gzip",
         test: /\.js$|\.css$|\.html$/,
         threshold: 10240,
         minRatio: 0.8
@@ -77,7 +72,7 @@ function Web(extractSass){
   });
 }
 
-const WebApp = Merge(Web(extractSassApp), {
+const WebApp = merge(Web(extractSassApp), {
   entry: {
     app: Path.resolve(Common.resourcesDir, './prod.js')
   },
@@ -87,18 +82,17 @@ const WebApp = Merge(Web(extractSassApp), {
       chunks: ["app"],
       template: Path.resolve(Common.resourcesDir, './prod.html'),
       favicon: Path.resolve(Common.resourcesDir, './images/favicon.ico')
-    }),
-    new CleanWebpackPlugin([publicFolderName], {verbose: false}),
+    })
   ]
 });
 
-const WebEmbed = Merge(Web(extractSassEmbed), {
+const WebEmbed = merge(Web(extractSassEmbed), {
   entry: {
     embedded: Path.resolve(Common.resourcesDir, './prod-embed.js')
   }
 });
 
-const ScalaJs = Merge(Common.ScalaJs,{
+const ScalaJs = merge(Common.ScalaJs,{
   plugins: [
     ProdConfig
   ]

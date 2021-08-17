@@ -1,18 +1,18 @@
 const Path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Webpack = require('webpack');
-const Merge = require("webpack-merge");
+const { merge } = require("webpack-merge");
 
 const Common = require('./webpack.common.js');
 const devDir = Path.resolve(Common.rootDir, 'dev-static');
 
-const ScalaJs = Merge(Common.ScalaJs, {
+const ScalaJs = merge(Common.ScalaJs, {
   output: {
     publicPath: '/'
   }
 });
 
-const Web = Merge(Common.Web, {
+const Web = merge(Common.Web, {
   output: {
     publicPath: '/'
   },
@@ -28,7 +28,7 @@ const Web = Merge(Common.Web, {
           "style-loader",
           "css-loader",
           "resolve-url-loader",
-          "sass-loader?sourceMap"
+          { loader: "sass-loader", options: {sourceMap: true} },
         ]
       }
     ]
@@ -36,13 +36,13 @@ const Web = Merge(Common.Web, {
   devServer: {
     hot: true,
     host: "0.0.0.0",
-    contentBase: [
+    static: [
       devDir,
       __dirname,
       Common.rootDir
     ],
     proxy: {
-      "/***": {
+      "/": {
         target: "http://localhost:9000",
         bypass: function(req, res, proxyOptions) {
           // regex matching snippet ids
@@ -86,7 +86,7 @@ const Web = Merge(Common.Web, {
   ]
 });
 
-module.exports = Merge(
+module.exports = merge(
   ScalaJs,
   Web
 );

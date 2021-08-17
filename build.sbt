@@ -183,8 +183,10 @@ lazy val client = project
   .settings(baseNoCrossSettings)
   .settings(baseJsSettings)
   .settings(
-    webpack / version := "3.5.5",
-    startWebpackDevServer / version := "2.7.1",
+    webpack / version := "5.50.0",
+    // Need 4.0 because https://github.com/webpack/webpack-dev-server/issues/2484
+    startWebpackDevServer / version := "4.0.0-beta.0",
+    webpackCliVersion := "4.7.2",
     fastOptJS / webpackConfigFile := webpackDevConf.value,
     fullOptJS / webpackConfigFile := webpackProdConf.value,
     webpackMonitoredDirectories += (Compile / resourceDirectory).value,
@@ -205,18 +207,15 @@ lazy val client = project
       "typeface-roboto-slab" -> "0.0.35",
     ),
     Compile / npmDevDependencies ++= Seq(
-      "compression-webpack-plugin" -> "1.0.0",
-      "clean-webpack-plugin" -> "0.1.16",
-      "css-loader" -> "0.28.5",
-      "extract-text-webpack-plugin" -> "3.0.0",
-      "file-loader" -> "0.11.2",
-      "html-webpack-plugin" -> "2.30.1",
-      "node-sass" -> "4.14.1",
-      "resolve-url-loader" -> "2.1.0",
-      "sass-loader" -> "6.0.6",
-      "style-loader" -> "0.18.2",
-      "uglifyjs-webpack-plugin" -> "1.0.0",
-      "webpack-merge" -> "4.1.0",
+      "compression-webpack-plugin" -> "8.0.1",
+      "css-loader" -> "6.2.0",
+      "mini-css-extract-plugin" -> "2.1.0",
+      "html-webpack-plugin" -> "5.3.2",
+      "node-sass" -> "6.0.1",
+      "resolve-url-loader" -> "4.0.0",
+      "sass-loader" -> "12.1.0",
+      "style-loader" -> "3.2.1",
+      "webpack-merge" -> "5.8.0",
     ),
     libraryDependencies ++= Seq(
       "com.github.japgolly.scalajs-react" %%% "extra" % "1.7.7",

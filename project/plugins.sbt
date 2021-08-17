@@ -5,7 +5,7 @@ addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.10.0")
 addSbtPlugin("com.eed3si9n" % "sbt-projectmatrix" % "0.8.0")
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % SbtShared.ScalaJSVersions.current)
 
-addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.20.0")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.21.0-RC1")
 addSbtPlugin("org.olegych" %% "sbt-cached-ci" % "1.0.4")
 
 //workaround https://github.com/sbt/sbt/issues/5374
