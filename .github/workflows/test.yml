@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Start mongodb
       uses: supercharge/mongodb-github-action@1.6.0
-    - uses: nixbuild/nix-quick-install-action@v5
+    - uses: nixbuild/nix-quick-install-action@v6
     - name: Run tests
       run: |
         nix-shell -A scastie --command  "sbt -DSnippetsContainerTest.mongo=true cachedCiTest"
