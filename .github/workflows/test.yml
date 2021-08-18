@@ -14,8 +14,10 @@ jobs:
     - name: Run tests
       run: |
         nix-shell -A scastie --command  "
+          cd ..
           git clone -b sd https://github.com/giabao/scalajs-bundler
           cd scalajs-bundler
           sbt publishLocal
+          cd ../scastie
           sbt -DSnippetsContainerTest.mongo=true cachedCiTest
         "
