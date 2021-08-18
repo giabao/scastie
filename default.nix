@@ -44,7 +44,7 @@ in rec {
       ln -s $out/share/sbt/bin/sbt $out/bin/
     '';
 
-    meta = with stdenv.lib; {
+    meta = with pkgs.lib; {
       homepage = http://www.scala-sbt.org/;
       license = licenses.bsd3;
       description = "A build tool for Scala, Java and more";
