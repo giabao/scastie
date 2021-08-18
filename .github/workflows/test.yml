@@ -17,5 +17,5 @@ jobs:
           git clone -b sd https://github.com/giabao/scalajs-bundler
           cd scalajs-bundler
           sbt publishLocal
+          sbt -DSnippetsContainerTest.mongo=true cachedCiTest
         "
-        nix-shell -A scastie --command  "sbt -DSnippetsContainerTest.mongo=true cachedCiTest"
