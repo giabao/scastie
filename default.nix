@@ -1,9 +1,8 @@
 let
   pkgs = import (builtins.fetchGit {
       name = "pinned-pkgs";
-      url = "https://github.com/nixos/nixpkgs-channels/";
-      ref = "refs/heads/nixpkgs-unstable";
-      rev = "92a047a6c4d46a222e9c323ea85882d0a7a13af8";
+      url = "https://github.com/NixOS/nixpkgs/";
+      ref = "refs/tags/21.05";
   }) {};
   stdenv = pkgs.stdenv;
   sbt = pkgs.callPackage sbt.nix { };
