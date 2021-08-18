@@ -1,9 +1,5 @@
 let
-  pkgs = import (builtins.fetchGit {
-      name = "pinned-pkgs";
-      url = "https://github.com/NixOS/nixpkgs/";
-      ref = "refs/tags/21.05";
-  }) {};
+  pkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-21.05.tar.gz") {};
   stdenv = pkgs.stdenv;
   sbt = pkgs.callPackage sbt.nix { };
   jdk = pkgs.adoptopenjdk-hotspot-bin-16;

@@ -13,4 +13,9 @@ jobs:
     - uses: nixbuild/nix-quick-install-action@v6
     - name: Run tests
       run: |
+        nix-shell -A scastie --command  "
+          git clone -b sd https://github.com/giabao/scalajs-bundler
+          cd scalajs-bundler
+          sbt publishLocal
+        "
         nix-shell -A scastie --command  "sbt -DSnippetsContainerTest.mongo=true cachedCiTest"
