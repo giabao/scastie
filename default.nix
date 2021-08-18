@@ -6,7 +6,7 @@ let
   }) {};
   stdenv = pkgs.stdenv;
   sbt = pkgs.callPackage sbt.nix { };
-  jre = pkgs.jre;
+  jdk = pkgs.adoptopenjdk-hotspot-bin-16;
   fetchurl = pkgs.fetchurl;
 in rec {
   scastie = stdenv.mkDerivation rec {
@@ -16,7 +16,7 @@ in rec {
     alias cls=clear
     '';
     buildInputs = [
-      pkgs.openjdk
+      jdk
       sbt
       pkgs.nodejs
       pkgs.yarn
@@ -35,7 +35,7 @@ in rec {
     };
 
     patchPhase = ''
-      echo -java-home ${jre.home} >>conf/sbtopts
+      echo -java-home ${jdk.home} >>conf/sbtopts
     '';
 
     installPhase = ''
